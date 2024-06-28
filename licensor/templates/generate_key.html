@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="col-sm-5">
+        <!-- Breadcumps -->
+          <nav aria-label="breadcrumb">
+              <ol class="breadcrumb bg-transparent  mb-0 pt-0 pr-0">
+              <li class="breadcrumb-item"><a href="{% url "home" %}">Domains</a></li>
+              <li class="breadcrumb-item active" aria-current="page">New Key</li>
+              </ol>
+          </nav>
+      
+          <form method="post" action="{% url 'generate_domain_key' %}">
+              {% csrf_token %}
+              <div class="form-group">
+                  {{form.domain}}
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">GENERATE KEY</button>
+          </form>
+
+        <!-- Output Messages -->
+        {% if messages %}
+        <div class="messages my-3">
+            {% for message in messages %}
+                <p {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show"{% endif %}>
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+          <!-- Generate Key -->
+           {% if license %}
+           <div class="mt-4 d-flex align-items-center">
+               <input type="text" id="textToCopy" class="form-control" value="{{license.key}}"/>
+               <button id="copyBtn" class="btn btn-outline-success" onclick="copyText()">Copy</button>
+           </div>
+           
+            {% endif %}
+           
+
+    </div>
+        <script>
+            function copyText() {
+                // Get the text field
+                var copyText = document.getElementById("textToCopy");
+                var copyBtn = document.getElementById("copyBtn")
+
+                // Select the text field
+                copyText.select();
+                copyText.setSelectionRange(0, 99999); // For mobile devices
+
+                // Copy the text inside the text field
+                document.execCommand("copy");
+
+                // Alert the copied text
+                copyBtn.innerText = "Copied"
+                copyBtn.classList.add("btn-success")
+                copyBtn.classList.remove("btn-outline-success")
+            }
+        </script>
+    </div>
+</div>
+
+
+{% endblock content %}

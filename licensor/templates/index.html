@@ -1,0 +1,96 @@
+    {% extends "base.html" %}
+
+
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Breadcumps -->
+    
+    
+    <!-- New Key Generation Button -->
+    
+    
+    
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb  bg-transparent d-flex flex-wrap align-items-center justify-content-between mb-0 pt-0 pr-0">
+        <li class="breadcrumb-item active" aria-current="page">Domains</li>
+        <a href="{% url "generate_domain_key" %}" class="btn btn-success d-inline-block" tabindex="-1" role="button" aria-disabled="true">NEW KEY</a>
+        </ol>
+    </nav>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="bg-primary text-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">DOMAIN</th>
+                <th scope="col">KEY</th>
+                <th scope="col">IS ACTIVE</th>
+                <th scope="col">CREATED AT</th>
+                <th scope="col">IS VERIFIED</th>
+                <th scope="col">UPDATED AT</th>
+              </tr>
+            </thead>
+            <tbody class=" table-bordered"> 
+               {% for license in page_obj %}
+                    {% with total_index=forloop.counter|add:page_obj.start_index|add:-1 %}
+               
+                    <tr onclick="window.location.href='{% url 'domain' license.id %}'" style="cursor: pointer;">
+                        <th scope="row">{{total_index}}</th>
+                        <td>{{license.domain}}</td>
+                        <td>{{license.key}}</td>
+                        <td><i class="fas fa-{% if license.is_active %}check{% else %}times{% endif %}-circle d-block text-{% if license.is_active %}success{% else %}danger{% endif %}"></i></i></td>
+                        <td>{{license.created_at}}</td>
+                        <td><i class="fas fa-{% if license.is_verified %}check{% else %}times{% endif %}-circle d-block text-{% if license.is_verified %}success{% else %}danger{% endif %}"></i></i></td>
+                        <td>{{license.updated_at}}</td>
+                    </tr>
+                    {% endwith %}
+                {%empty%}
+                <tr>
+                    <td colspan="7">No Domain Keys Yet!</td>
+                </tr>
+               {% endfor %}
+
+            </tbody>
+
+        </table>
+    </div>
+
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="Previous">
+                    1
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="page-item"><a class="page-link active" href="#">{{ page_obj.number }}</a></li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+                    {{ page_obj.paginator.num_pages }}
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+
+{% endblock content %}
