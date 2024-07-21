@@ -2,7 +2,77 @@
 
 
 {% block content %}
-    
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <div class='font-weight-bold'>{% if license.is_active %} <span class="text-success">Active</span> {% else %} <span class="text-danger">Inactive</span> {% endif %}</div>
+                        <div class="d-flex">
+                            {% if license.is_active %}
+                            <a href="{% url "domain" license.id %}?domain=deactivate" class="btn btn-warning btn-sm mr-3">Deactivate</a>
+                            {% else %}
+                            <a href="{% url "domain" license.id %}?domain=activate" class="btn btn-success btn-sm mr-3">Activate</a>
+                            {% endif %}
+                                <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
+                                Delete
+                            </button>
+                        </div>
+                </div>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title mb-3">{{license.domain}}</h3>
+              <p class="card-text">Date Registered: <span class="text-muted">{{license.created_at}}</span> </p>
+              <p class="card-text">Activation Key: <span class="text-muted" id="text-to-copy">{{license.activation_key}}</span></p>
+              <p class="card-text">Key Sent: <span class="text-muted" id="text-to-copy">{% if license.key_sent %}YES {% else %} NO{% endif %}</span></p>
+              
+              <div class="d-flex align-items-center">
+                  <a href="{% url "home" %}" class="mr-3">Back</a>
+                  <button class="btn btn-success btn-sn" id="copy-button">Copy Key</button>
+              </div>
+            </div>
+        </div>
+           
+           
 
+    </div>
+    <script>
+        document.getElementById('copy-button').addEventListener('click', function(e) {
+            const textToCopy = document.getElementById('text-to-copy').innerText;
+
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+
+            tempTextArea.select();
+            document.execCommand('copy');
+
+            document.body.removeChild(tempTextArea);
+            e.target.innerText = "Copied"
+            
+        });
+    </script>
+    </div>
+
+
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLabel">Delete Domain</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body d-flex justify-content-center align-items-center">
+            <a href="{% url "domain" license.id %}?domain=delete" class="btn btn-danger btn-lg">Confirm</a>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
 
 {% endblock content %}

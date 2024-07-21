@@ -1,0 +1,7 @@
+
+
+@media(min-width: 991px) {
+    .table-show {
+        display: table-cell !important;
+    }
+}

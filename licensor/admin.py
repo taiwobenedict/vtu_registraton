@@ -3,4 +3,4 @@ from .models import License
 
 @admin.register(License)
 class LicenseAdmin(admin.ModelAdmin):
-    list_display = ('key', 'domain', 'is_active', 'created_at', 'updated_at')
+    list_display = ('activation_key', 'domain', 'key_sent', 'created_at', 'updated_at')
