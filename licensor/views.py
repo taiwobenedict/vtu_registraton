@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm, DomainForm
+from .forms import LoginForm, DomainForm, ChangePasswordForm, ProfileForm
 from .models import License
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -65,7 +65,7 @@ def generate_domain_key(request):
     form = DomainForm()
     return render(request, "generate_key.html", {"form": form, "license": license})
 
-
+@login_required(login_url="/login/")
 def domain_view(request, id):
     if request.method == "GET":
         action = request.GET.get("domain", "")
@@ -128,3 +128,50 @@ def login_view(request):
         # Return an 'invalid login' error message.
         form = LoginForm()
         return render(request, "login.html", {"form": form})
+    
+@login_required(login_url="/login/")   
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect("/")
+
+@login_required(login_url="/login/")
+def profile(request):
+    if request.method == "POST":
+        profile_form = ProfileForm(request.POST, instance=request.user)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, "Profile updated successfully")
+        else:
+            messages.error(request, profile_form.errors)
+        return redirect('profile')
+
+    else:
+        profile_form = ProfileForm(instance=request.user)
+        
+
+    return render(request, "profile.html", {"profile": profile_form})
+
+@login_required(login_url="/login/")
+def change_password(request):
+    if request.method == "POST":
+        password_form = ChangePasswordForm(data=request.POST)
+        
+        if password_form.is_valid():
+            new_password = password_form.cleaned_data.get('new_password')
+            confirm_password = password_form.cleaned_data.get('confirm_password')
+            current_password = password_form.cleaned_data.get("current_password")
+            
+            if request.user.check_password(current_password):
+                if  new_password != confirm_password:
+                    messages.error(request,"Passwords did'nt match!")
+                else:
+                    request.user.set_password(new_password)
+                    login(request, request.user)
+                    messages.success(request, "You've successfully changed your password!")
+                    request.user.save()
+            else:
+                messages.error(request,'Current password not correct!')
+                    
+    password_form = ChangePasswordForm()
+    return render(request, 'change_password.html', {"form": password_form})
+

@@ -26,7 +26,6 @@
                 <th scope="col">#</th>
                 <th scope="col">DOMAIN</th>
                 <th scope="col" class="table-show d-none">KEY</th>
-                <th scope="col">IS ACTIVE</th>
                 <th scope="col" class="table-show d-none">CREATED AT</th>
                 <th scope="col">KEY SENT</th>
                 <th scope="col" class="table-show d-none">UPDATED AT</th>
@@ -40,9 +39,8 @@
                         <th scope="row">{{total_index}}</th>
                         <td>{{license.domain}}</td>
                         <td  class="table-show d-none">{{license.activation_key}}</td>
-                        <td><i class="fas fa-{% if license.is_active %}check{% else %}times{% endif %}-circle d-block text-{% if license.is_active %}success{% else %}danger{% endif %}"></i></i></td>
                         <td class="table-show d-none">{{license.created_at|date:"M j, Y" }}</td>
-                        <td><i class="fas fa-{% if license.is_verified %}check{% else %}times{% endif %}-circle d-block text-{% if license.key_sent %}success{% else %}danger{% endif %}"></i></i></td>
+                        <td><i class="fas fa-{% if license.key_sent %}check{% else %}times{% endif %}-circle d-block text-{% if license.key_sent %}success{% else %}danger{% endif %}"></i></i></td>
                         <td class="table-show d-none">{{license.updated_at|date:"M j, Y" }}</td>
                     </tr>
                     {% endwith %}

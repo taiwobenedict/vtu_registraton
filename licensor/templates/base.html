@@ -28,14 +28,19 @@
               <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">{{user.username|title}}</a>
-                    </li>
-                    <form method="POST" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <li class="nav-item active">
-                            <button class="btn text-light">Logout</button>
-                        </li>
-                    </form>             
+                      
+                        <div class="dropdown">
+                          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            {{user.username|title}}
+                          </button>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                            <a class="dropdown-item" href="{% url 'change_password' %}">Change password</a>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                          </div>
+                        </div>
+
+                    </li>         
                 {% endif %}
               </ul>
             </div>
