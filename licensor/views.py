@@ -98,9 +98,9 @@ def verify_domain_key(request):
         obj.save()
         secret_key = obj.secret_key 
         
-        return Response({"secret_key": secret_key}, status=200)
+        return Response({'success': True, "secret_key": secret_key}, status=200)
     else:
-        return Response({'error': 'Key not registered'},status=400)
+        return Response({'success': False,'error': 'Invalid key!'},status=400)
 
 
 def login_view(request):
