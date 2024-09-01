@@ -22,6 +22,8 @@ def decrypt_key(hex_key: str, encrypted_data: str) -> str:
     return unpad(decrypted_data, AES.block_size).decode()
 
 def extract_domain(url: str) -> str:
+    if not url.startswith(('http://', 'https://','www')):
+        url = 'http://' + url
     parsed_url = urlparse(url)
     return parsed_url.netloc
 
