@@ -31,7 +31,8 @@ def generate_domain_key(request):
     if request.method == "POST":
         form = DomainForm(request.POST)
         if form.is_valid():
-            domain = form.cleaned_data["domain"]
+            
+            domain = extract_domain(form.cleaned_data["domain"])
 
             try:
                 obj = License.objects.get(domain=domain)
@@ -43,7 +44,6 @@ def generate_domain_key(request):
                 secret_key = generate_secret_key(activation_key, domain_name=domain)
                 url = get_full_url(request)
                 public_key = encrypt_key(activation_key, url)
-                
 
                 license = License.objects.create(
                     domain=domain, activation_key=activation_key, secret_key=secret_key

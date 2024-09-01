@@ -1,20 +1,29 @@
+from urllib.parse import urlparse
 import hashlib
 import random
 import string
 from django.http import HttpRequest
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
 import binascii
 
 def encrypt_key(hex_key: str, data: str) -> str:
     key = binascii.unhexlify(hex_key)
     cipher = AES.new(key, AES.MODE_ECB)
-    if len(data) > 16:
-        data = data[:16]
-    elif len(data) < 16:
-        data = data.ljust(16)
-    ciphertext = cipher.encrypt(data.encode())
+    padded_data = pad(data.encode(), AES.block_size)
+    ciphertext = cipher.encrypt(padded_data)
     return binascii.hexlify(ciphertext).decode()
 
+def decrypt_key(hex_key: str, encrypted_data: str) -> str:
+    key = binascii.unhexlify(hex_key)
+    encrypted_data = binascii.unhexlify(encrypted_data)
+    cipher = AES.new(key, AES.MODE_ECB)
+    decrypted_data = cipher.decrypt(encrypted_data)
+    return unpad(decrypted_data, AES.block_size).decode()
+
+def extract_domain(url: str) -> str:
+    parsed_url = urlparse(url)
+    return parsed_url.netloc
 
 
 
