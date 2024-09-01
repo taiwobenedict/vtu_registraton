@@ -37,34 +37,45 @@
 
           <!-- Generate Key -->
            {% if license %}
-           <div class="mt-4 d-flex align-items-center">
-               <input type="text" id="textToCopy" class="form-control" value="{{license.activation_key}}"/>
-               <button id="copyBtn" class="btn btn-outline-success" onclick="copyText()">Copy</button>
-           </div>
+           <p class="card-text">Activation Key: <span id="activation-key">{{license.activation_key}}</span></p>
+           <p class="card-text">Public Key: <span id="public-key">{{license.public_key}}</span></p>
            
+           <button class="btn btn-success btn-sm" id="copy-activation-key">Copy Activation Key</button>
+           <button class="btn btn-info btn-sm" id="copy-public-key">Copy Public Key</button>
             {% endif %}
            
 
     </div>
-        <script>
-            function copyText() {
-                // Get the text field
-                var copyText = document.getElementById("textToCopy");
-                var copyBtn = document.getElementById("copyBtn")
+    <script>
+        document.getElementById('copy-activation-key').addEventListener('click', function(e) {
+            const textToCopy = document.getElementById('activation-key').innerText;
 
-                // Select the text field
-                copyText.select();
-                copyText.setSelectionRange(0, 99999); // For mobile devices
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
 
-                // Copy the text inside the text field
-                document.execCommand("copy");
+            tempTextArea.select();
+            document.execCommand('copy');
 
-                // Alert the copied text
-                copyBtn.innerText = "Copied"
-                copyBtn.classList.add("btn-success")
-                copyBtn.classList.remove("btn-outline-success")
-            }
-        </script>
+            document.body.removeChild(tempTextArea);
+            e.target.innerText = "Copied"
+            
+        });
+        document.getElementById('copy-public-key').addEventListener('click', function(e) {
+            const textToCopy = document.getElementById('public-key').innerText;
+
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+
+            tempTextArea.select();
+            document.execCommand('copy');
+
+            document.body.removeChild(tempTextArea);
+            e.target.innerText = "Copied"
+            
+        });
+    </script>
     </div>
 </div>
 

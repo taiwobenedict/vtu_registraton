@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, DomainForm, ChangePasswordForm, ProfileForm
 from .models import License
@@ -9,22 +9,9 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-import hashlib
-import random
-import string
+from .utlils import *
 
 
-def generate_activation_key():
-    characters = string.hexdigits.lower()
-    key = "".join(random.choice(characters) for _ in range(32))
-    return key
-
-
-def generate_secret_key(activation_key, domain_name):
-    combined_string = activation_key + domain_name
-    hash_object = hashlib.sha256(combined_string.encode())
-    secret_key = hash_object.hexdigest()
-    return secret_key
 
 
 # Create your views here.
@@ -54,10 +41,14 @@ def generate_domain_key(request):
             if not obj:
                 activation_key = generate_activation_key()
                 secret_key = generate_secret_key(activation_key, domain_name=domain)
+                url = get_full_url(request)
+                public_key = encrypt_key(activation_key, url)
+                
 
                 license = License.objects.create(
                     domain=domain, activation_key=activation_key, secret_key=secret_key
                 )
+                license.public_key = public_key
                 messages.success(request, "Key successfully generated")
             else:
                 messages.error(request, "Domain already exist!", "danger")
