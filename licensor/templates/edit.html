@@ -23,12 +23,14 @@
             <div class="card-body">
               <h3 class="card-title mb-3">{{license.domain}}</h3>
               <p class="card-text">Date Registered: <span class="text-muted">{{license.created_at}}</span> </p>
-              <p class="card-text">Activation Key: <span class="text-muted" id="text-to-copy">{{license.activation_key}}</span></p>
+              <p class="card-text">Activation Key: <span id="activation-key">{{license.activation_key}}</span></p>
+              <p class="card-text">Public Key: <span id="public-key">{{license.public_key}}</span></p>
               <p class="card-text">Key Sent: <span class="text-muted" id="text-to-copy">{% if license.key_sent %}YES {% else %} NO{% endif %}</span></p>
               
               <div class="d-flex align-items-center">
                   <a href="{% url "home" %}" class="mr-3">Back</a>
-                  <button class="btn btn-success btn-sn" id="copy-button">Copy Key</button>
+                  <button class="btn btn-success btn-sm mr-3" id="copy-activation-key">Copy Activation Key</button>
+                  <button class="btn btn-info btn-sm" id="copy-public-key">Copy Public Key</button>
               </div>
             </div>
         </div>
@@ -37,21 +39,35 @@
 
     </div>
     <script>
-        document.getElementById('copy-button').addEventListener('click', function(e) {
-            const textToCopy = document.getElementById('text-to-copy').innerText;
+      document.getElementById('copy-activation-key').addEventListener('click', function(e) {
+          const textToCopy = document.getElementById('activation-key').innerText;
 
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = textToCopy;
-            document.body.appendChild(tempTextArea);
+          const tempTextArea = document.createElement('textarea');
+          tempTextArea.value = textToCopy;
+          document.body.appendChild(tempTextArea);
 
-            tempTextArea.select();
-            document.execCommand('copy');
+          tempTextArea.select();
+          document.execCommand('copy');
 
-            document.body.removeChild(tempTextArea);
-            e.target.innerText = "Copied"
-            
-        });
-    </script>
+          document.body.removeChild(tempTextArea);
+          e.target.innerText = "Copied"
+          
+      });
+      document.getElementById('copy-public-key').addEventListener('click', function(e) {
+          const textToCopy = document.getElementById('public-key').innerText;
+
+          const tempTextArea = document.createElement('textarea');
+          tempTextArea.value = textToCopy;
+          document.body.appendChild(tempTextArea);
+
+          tempTextArea.select();
+          document.execCommand('copy');
+
+          document.body.removeChild(tempTextArea);
+          e.target.innerText = "Copied"
+          
+      });
+  </script>
     </div>
 
 

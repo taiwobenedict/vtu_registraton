@@ -6,6 +6,7 @@ import uuid
 class License(models.Model):
     activation_key = models.CharField(max_length=64, unique=True)
     secret_key = models.CharField(max_length=300, unique=True, editable=False)
+    public_key =  models.CharField(max_length=64, blank=True)
     domain = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     key_sent = models.BooleanField(default= False)

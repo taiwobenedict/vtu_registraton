@@ -46,9 +46,8 @@ def generate_domain_key(request):
                 public_key = encrypt_key(activation_key, url)
 
                 license = License.objects.create(
-                    domain=domain, activation_key=activation_key, secret_key=secret_key
+                    domain=domain, activation_key=activation_key, secret_key=secret_key, public_key= public_key
                 )
-                license.public_key = public_key
                 messages.success(request, "Key successfully generated")
             else:
                 messages.error(request, "Domain already exist!", "danger")
