@@ -10,4 +10,3 @@ def generate_secret_key(activation_key, domain_name):
 activation_key = "B"
 domain_name = "A"
 secret_key = generate_secret_key(activation_key, domain_name)
-print(f"Secret Key: {secret_key}")

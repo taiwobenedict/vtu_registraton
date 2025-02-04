@@ -79,6 +79,8 @@ def domain_view(request, id):
 def verify_domain_key(request):
     activation_key = request.data.get("activation_key", "")
     domain = request.data.get("domain", "")
+    
+    
     try:
         obj = License.objects.get(domain=domain, activation_key =activation_key)
     except License.DoesNotExist:
